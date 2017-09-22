@@ -47,9 +47,9 @@ export default pool => {
     if (req.body.question !== '') {
       const question = req.body.question
       const insertQuery =
-        'INSERT INTO questions (question, added) VALUES ($1, $2) RETURNING id'
+        'INSERT INTO questions (question, added) VALUES ($1, now()) RETURNING id'
       pool
-        .query(insertQuery, [question, Date.now()])
+        .query(insertQuery, [question])
         .then(data => {
           pool
             .query(
@@ -79,9 +79,9 @@ export default pool => {
     if (req.body.question !== '') {
       const id = req.body.id
       const updateQuery =
-        'UPDATE questions SET upvotes = upvotes + 1, modified = $2 WHERE id = $1'
+        'UPDATE questions SET upvotes = upvotes + 1, modified = now() WHERE id = $1'
       pool
-        .query(updateQuery, [id, Date.now()])
+        .query(updateQuery, [id])
         .then(data => res.json(data.rows))
         .catch(e =>
           setImmediate(() => {
@@ -97,9 +97,9 @@ export default pool => {
     if (req.body.question !== '') {
       const id = req.body.id
       const updateQuery =
-        'UPDATE questions SET downvotes = downvotes - 1, modified = $2 WHERE id = $1'
+        'UPDATE questions SET downvotes = downvotes - 1, modified = now() WHERE id = $1'
       pool
-        .query(updateQuery, [id, Date.now()])
+        .query(updateQuery, [id])
         .then(data => res.json(data.rows))
         .catch(e =>
           setImmediate(() => {
